@@ -1,18 +1,28 @@
 Alerts = Ember.Namespace.create();
-
 Alerts.AlertTypeMap = {
-  info : 'info',
-  success : 'success',
-  warning : 'warning',
-  error : 'danger',
+  info : {
+    alertClass : 'alert-info',
+    glyphiconClass : 'glyphicon-info-sign',
+  },
+  success : {
+    alertClass : 'alert-success',
+    glyphiconClass : 'glyphicon-ok-sign',
+  },
+  warning : {
+    alertClass : 'alert-warning',
+    glyphiconClass : 'glyphicon-warning-sign',
+  },
+  error : {
+    alertClass : 'alert-danger',
+    glyphiconClass : 'glyphicon-exclamation-sign',
+  },
 };
-Alerts.Alert = Ember.View.extend({
+Alerts.AlertMessage = Ember.Component.extend({
   type : 'error',
-  typeClass : function() {
+  typeData : function() {
     var type = this.get("type");
-    type = Views.AlertTypeMap[type] || 'error';
-    return "alert alert-"+type+" alert-dismissable";
-  }.property('view.type'),
+    return Alerts.AlertTypeMap[type] || Alerts.AlertTypeMap.error;
+  }.property('type'),
   title : "",
   message : "",
   switchAlert : false,
@@ -24,10 +34,12 @@ Alerts.Alert = Ember.View.extend({
   },
 
   template : Ember.Handlebars.compile('' +
-  '{{#if view.switchAlert}}' +
-    '<div {{bind-attr class="view.typeClass"}}>' +
-      '<button class="close" {{action "dismissed" target="view"}}>&times;</button>' +
-      '<strong>{{view.title}}</strong> {{view.message}}' +
+  '{{#if switchAlert}}' +
+    '<div {{bind-attr class=":alert typeData.alertClass :alert-dismissable"}}>' +
+      '<button class="close" {{action "dismissed"}}>&times;</button>' +
+      '<strong><span {{bind-attr class=":glyphicon typeData.glyphiconClass :btn-sm"}}></span> {{title}}</strong> {{message}}' +
     '</div>' +
   '{{/if}}'),
 });
+
+Ember.Handlebars.helper('alert-message', Alerts.AlertMessage);

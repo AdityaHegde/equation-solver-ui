@@ -1,0 +1,3 @@
+ArrayContentView = Ember.ContainerView.extend({
+  
+});
