@@ -1,6 +1,6 @@
-EQN = Ember.Application.create();
+EQNAPP = Ember.Application.create();
 
-EQN.Router.map(function() {
+EQNAPP.Router.map(function() {
   this.resource('index', { path : '' }, function() {
     this.resource('problem', { path : ':problem_id' }, function() {
       this.resource('eqns', { path : 'eqns' }, function() {

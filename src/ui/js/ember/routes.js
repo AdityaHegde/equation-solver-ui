@@ -1,20 +1,20 @@
-EQN.IndexRoute = Ember.Route.extend({
+EQNAPP.IndexRoute = Ember.Route.extend({
   /*model : function(params) {
     this.transition('problem', params.problem_id);
   },*/
 });
 
-EQN.ProblemRoute = Ember.Route.extend({
+EQNAPP.ProblemRoute = Ember.Route.extend({
   model : function(params) {
   },
 });
 
-EQN.EqnsRoute = Ember.Route.extend({
+EQNAPP.EqnsRoute = Ember.Route.extend({
   model : function(params) {
   },
 });
 
-EQN.EqnRoute = Ember.Route.extend({
+EQNAPP.EqnRoute = Ember.Route.extend({
   model : function(params) {
   },
 });

@@ -14,7 +14,7 @@ window.heap = {
     heap.moveUp(array, array.length - 1, comparator);
   },
 
-  delete : function(array, comparator) {
+  deleteEle : function(array, comparator) {
     comparator = comparator || heap.comparator;
     if(array.length > 0) {
       var ele = array[0];
