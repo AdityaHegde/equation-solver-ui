@@ -105,17 +105,47 @@ EQN.Term = Ember.Object.extend({
     return this;
   },
 
+  power : function(pwr, sterm, dontRaisePwr) {
+    if(pwr === 0) {
+      return null;
+    }
+    //multiply the pwr and raise coeff
+    this.set("pwr", this.get("pwr") * pwr);
+    this.set("coeff", Math.pow(this.get("coeff"), pwr));
+    return this;
+  },
+
   multiply : function(term, sterm) {
+    //if 'term' has an EQN.TermBracket or an EQN.TermMultiply
     if(term.get("type") > 0) return term.multiply(this, sterm);
-    var t = new TermMultiply({terms : [this]});
+    //else create an EQN.TermMultiply with 'this' child term
+    var t = EQN.TermMultiply.create({terms : [this]});
+    //and multiply term to it
     return t.multiply(term, sterm);
   },
 
   hasSTerm : function(sterm) {
-    return true;
+    //return true if sterm is null
+    //if there is no sterm, expand all brackets
+    if(!sterm || Ember.typeOf(sterm) !== "instance") return true;
+    //check with 'this' 'vari'
+    if(this.get("vari") === sterm.get("vari")) return true;
+    return false;
+  },
+
+  replace : function(rterm, wterm) {
+    //replace 'rterm' with 'wterm'
+    if(this.get("vari") === rterm.get("vari")) {
+      var wtterm = wterm.copy();
+      wtterm.set("coeff", wtterm.get("coeff") * this.get("coeff"));
+      wtterm.set("pwr", wtterm.get("pwr") * this.get("pwr"));
+      return wtterm;
+    }
+    return this;
   },
 
   copy : function() {
+    //create a new EQN.TermBracket with same coeff, pwr and vari
     return EQN.Term.create({
       coeff : this.get("coeff"),
       vari : this.get("vari"),

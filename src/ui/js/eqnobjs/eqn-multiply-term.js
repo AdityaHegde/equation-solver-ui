@@ -92,8 +92,11 @@ EQN.TermMultiply = EQN.TermBracket.extend({
           //if simplified term is not a just number
           //type check for EQN.TermMultiply or EQN.TermBracket
           //vari check for EQN.Term with a variable
-          //TODO : handle dumplicates removed in beforeAddObserver
-          terms.insertAt(i++, term);
+          terms.insertAt(i, term);
+          if(terms.indexOf(term) === i) {
+            //handles dumplicates removed in beforeAddObserver
+            i++;
+          }
         }
         else if(term.get("coeff") !== 1) {
           //if the term is a number but not 1
@@ -194,8 +197,10 @@ EQN.TermMultiply = EQN.TermBracket.extend({
   copy : function() {
     var terms = [], thisterms = this.get("terms");
     for(var i = 0; i < thisterms.length; i++) {
+      //copy all the children terms
       terms.push(thisterms[i].copy());
     }
+    //create a new EQN.TermMultiply with same coeff, pwr and copied terms
     return EQN.TermMultiply.create({
       coeff : this.get("coeff"),
       pwr : this.get("pwr"),

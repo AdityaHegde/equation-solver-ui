@@ -10,12 +10,23 @@
 <body>
 
   <script type="text/x-handlebars" id="index">
-    <div class="ontainer">
+    <div class="container">
       {{outlet}}
-      {{input value=eqnStr}}
-      <button class="btn btn-primary" {{action "createEqn"}}>Create</button>
-      <p>{{parsedEqn}}</p>
-      <p>{{fullStr}}</p>
+      <p>
+        {{input value=eqnStr}}
+        <button class="btn btn-primary" {{action "createEqn"}}>Create</button>
+      </p>
+      <p>
+        {{input value=rterm}}
+        {{input value=wterm}}
+        <button class="btn btn-primary" {{action "replaceEqn"}}>Replace</button>
+      </p>
+      <div>
+        <p class="col-md-4">{{parsedEqn}}</p>
+        <p class="col-md-4">{{fullStr}}</p>
+        <p class="col-md-4">{{rFullStr}}</p>
+      </div>
+      <div class="clearfix"></div>
     </div>
   </script>
 

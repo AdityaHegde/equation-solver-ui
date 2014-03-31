@@ -46,14 +46,10 @@ EQN.TermBracket = EQN.Term.extend({
     }
     var zeroCoeffTerms = terms.findBy('coeff', 0), zeroPowerTerms = terms.findBy('pwr', 0);
     if(zeroCoeffTerms) {
-      zeroCoeffTerms.forEach(function(item) {
-        this.removeObject(item);
-      }, terms);
+      terms.removeObject(zeroCoeffTerms);
     }
     if(zeroPowerTerms) {
-      zeroPowerTerms.forEach(function(item) {
-        this.removeObject(item);
-      }, terms);
+      terms.removeObject(zeroPowerTerms);
     }
   },
 
@@ -70,10 +66,11 @@ EQN.TermBracket = EQN.Term.extend({
   },
 
   addTerm : function(term) {
-    if(term.get("type") === 2) {
+    if(term.get("type") === 2 && term.get("pwr") === 1) {
       //if the added term is a EQN.TermBracket, push the terms to 'this'
       var termterms = term.get("terms");
       for(var i = 0; i < termterms.length; i++) {
+        termterms[i].set("coeff", termterms[i].get("coeff") * term.get("coeff"));
         this.get("terms").pushObject(termterms[i]);
       }
     }
@@ -139,15 +136,10 @@ EQN.TermBracket = EQN.Term.extend({
 
   simplify : function(sterm) {
     var terms = this.get("terms"), term;
-    for(var i = 0; i < terms.get("length");) {
-      //simplify each term and add it if it is valid
-      term = terms[i].simplify(sterm);
-      terms.removeAt(i);
-      if(term) {
-        //TODO : Handle removal of duplicates in beforeAddObserver
-        terms.insertAt(i++, term);
-      }
-    }
+    forEachDynamicContent(terms, function(term) {
+      return term.simplify(this);
+    }, sterm, this);
+    terms = this.get("terms");
     if(terms.length === 1) {
       //return the single term instead of having a EQN.TermBracket with single term
       if(!term) term = terms[0];
@@ -178,7 +170,7 @@ EQN.TermBracket = EQN.Term.extend({
     //put all the terms which has 'sterm' in the begining, rest at the end
     //only the terms with 'sterm' will be expanded
     for(var i = 0; i < ts.length; i++) {
-      if(ts[i].hasSTerm(sterm) === 1) {
+      if(ts[i].hasSTerm(sterm)) {
         terms.unshift(ts[i]);
         stf = 1;
       }
@@ -223,11 +215,9 @@ EQN.TermBracket = EQN.Term.extend({
     var terms = this.get("terms");
     if(term.get("type") < 2) {
       //if the term is a simple term or a EQN.TermMultiply, multiply 'term' to every term in the EQN.TermBracket
-      for(var i = 0; i < terms.length; i++) {
-        var mt = terms[i].multiply(term.copy(), sterm);
-        terms.removeAt(i);
-        terms.insertAt(i, mt);
-      }
+      forEachDynamicContent(terms, function(term) {
+        return term.multiply(this.term.copy(), this.sterm);
+      }, {sterm : sterm, term : term}, this);
     }
     else {
       //else multiply every term of 'term' (a EQN.TermBracket) with every term in 'this' EQN.TermBracket
@@ -235,9 +225,42 @@ EQN.TermBracket = EQN.Term.extend({
       var tterms = term.get("terms");
       for(var i = 0; i < terms.length; i++) {
         for(var j = 0; j < tterms.length; j++) {
-          this.addTerm(terms[i].multiply(tterms[j]));
+          var thist = terms[i].copy(), thatt = tterms[j].copy();
+          this.addTerm(thist.multiply(thatt));
         }
       }
+    }
+    return this;
+  },
+
+  hasSTerm : function(sterm) {
+    //return true if sterm is null
+    //if there is no sterm, expand all brackets
+    if(!sterm || Ember.typeOf(sterm) !== "instance") return true;
+    //check with 'this' 'vari'
+    if(this.get("vari") === sterm.get("vari")) return true;
+    //check inside all children terms
+    var terms = this.get("terms");
+    for(var i = 0; i < terms.length; i++) {
+      if(terms[i].hasSTerm(sterm)) return true;
+    }
+    return false;
+  },
+
+  replace : function(rterm, wterm) {
+    //replace 'rterm' with 'wterm'
+    if(this.get("vari") === rterm.get("vari")) {
+      var wtterm = wterm.copy();
+      wtterm.set("coeff", wtterm.get("coeff") * this.get("coeff"));
+      wtterm.set("pwr", wtterm.get("pwr") * this.get("pwr"));
+      return wtterm;
+    }
+    else {
+      //call replace on all child terms
+      var terms = this.get("terms");
+      forEachDynamicContent(terms, function(term) {
+        return term.replace(this.rterm, this.wterm);
+      }, {rterm : rterm, wterm : wterm}, this);
     }
     return this;
   },
@@ -245,8 +268,10 @@ EQN.TermBracket = EQN.Term.extend({
   copy : function() {
     var terms = [], thisterms = this.get("terms");
     for(var i = 0; i < thisterms.length; i++) {
+      //copy all the children terms
       terms.push(thisterms[i].copy());
     }
+    //create a new EQN.TermBracket with same coeff, pwr and copied terms
     return EQN.TermBracket.create({
       coeff : this.get("coeff"),
       pwr : this.get("pwr"),

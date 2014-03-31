@@ -94,3 +94,24 @@ Math.hcf = function(a, b) {
   }
   return b;
 };
+
+var forEachDynamicContent = function(array, callback, context, term, addFun) {
+  var eles = [];
+  context = context || this;
+  while(array.length > 0) {
+    var ele = array.shiftObject();
+    ele = callback.call(context, ele);
+    if(ele) {
+      eles.push(ele);
+    }
+  }
+  for(var i = 0; i < eles.length; i++) {
+    term.addTerm(eles[i]);
+  }
+};
+
+var createAndParseTerm = function(termType, termStr) {
+  var term = termType.create(), tokens = EQN.EqnTokens.create({str : termStr});
+  term.parse(tokens);
+  return term;
+};
