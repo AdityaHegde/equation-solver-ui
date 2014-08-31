@@ -6,31 +6,12 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/bootstrap-theme.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
   <script type="text/x-handlebars" id="index">
-    <div class="container">
-      {{outlet}}
-      <p>
-        {{input value=eqnStr}}
-        <button class="btn btn-primary" {{action "createEqn"}}>Create</button>
-      </p>
-      <p>
-        {{input value=rterm}}
-        {{input value=wterm}}
-        <button class="btn btn-primary" {{action "replaceEqn"}}>Replace</button>
-      </p>
-      <div>
-        <p class="col-md-4">{{parsedEqn}}</p>
-        <p class="col-md-4">{{fullStr}}</p>
-        <p class="col-md-4">{{rFullStr}}</p>
-      </div>
-      <div class="clearfix"></div>
-    </div>
-  </script>
-
-    <!--nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default" role="navigation">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-items">
           <span class="sr-only">Toggle navigation</span>
@@ -42,34 +23,62 @@
       </div>
       <div class="collapse navbar-collapse" id="navbar-items">
         <ul class="nav navbar-nav">
-          <li id="index-link">{{#link-to 'index'}}Home{{/link-to}}</li>
-          <li id="index-link">{{#link-to 'problem' 0}}Problem{{/link-to}}</li>
-          <li id="index-link">{{#link-to 'eqns' 0}}Eqns{{/link-to}}</li>
+          <li>{{#link-to 'problems'}}Problems{{/link-to}}</li>
         </ul>
+        {{#if EQNAPP.CurProfile.user_name}}<p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link">{{EQNAPP.CurProfile.user_name}}</a></p>{{/if}}
       </div>
-    </nav-->
+    </nav>
+    <div class="container">
+      {{outlet}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="problems">
+    {{#link-to 'problem' 'new' classNameBindings=":btn :btn-primary :btn-sm"}}New Problem{{/link-to}}
+    <div>
+      {{#each model.problems}}
+        <div>{{#link-to 'problem' this}}{{name}}{{/link-to}}</div>
+      {{/each}}
+    </div>
+  </script>
 
   <script type="text/x-handlebars" id="problem">
-    {{outlet}}
+    <div>
+      {{#each model.eqns}}
+        <div class="clearfix">
+          {{view Ember.Checkbox class="col-md-1" checked=isMain}}
+          {{view Ember.TextField class="col-md-2" value=lhsTermStr}}
+          <span class="col-md-1 text-center">{{#if isMain}}: 0 ={{else}}={{/if}}</span>
+          {{view Ember.TextField class="col-md-7" value=eqnStr}}
+          <span class="glyphicon glyphicon-remove col-md-1" {{action "removeEqn" this}}></span>
+        </div>
+      {{/each}}
+    </div>
+    <button class="btn btn-sm btn-primary" {{action "addEqn"}}>Add Eqn</button>
+    <button class="btn btn-sm btn-primary" {{action "simplify"}}>Simplify</button>
+    <button class="btn btn-sm btn-primary" {{action "factorize"}}>Factorize</button>
+    <div class="main-eqn-display">
+      Simplified Main : {{model.mainEqn.fullStr}}
+    </div>
   </script>
 
-  <script type="text/x-handlebars" id="eqns">
-  </script>
-
-  <script src="js/lib/jquery-1.10.2.js"></script>
+  <script src="js/lib/jquery-2.1.1.js"></script>
   <script src="js/lib/bootstrap.js"></script>
   <script src="js/lib/handlebars.js"></script>
   <script src="js/lib/ember.js"></script>
   <script src="js/lib/ember-data.js"></script>
-  <script src="js/utils/utils.js"></script>
   <script src="js/utils/ember-utils.js"></script>
+  <script src="js/utils/crud-adapter.js"></script>
+  <script src="js/utils/model-wrapper.js"></script>
+  <script src="js/utils/eqn-utils.js"></script>
   <script src="js/ember/app.js"></script>
+  <script src="js/ember/objects.js"></script>
   <script src="js/ember/routes.js"></script>
   <script src="js/ember/controllers.js"></script>
-  <script src="js/eqnobjs/eqn-tokens.js"></script>
-  <script src="js/eqnobjs/eqn-obj.js"></script>
+  <script src="js/eqnobjs/eqn-gen.js"></script>
   <script src="js/eqnobjs/eqn-term.js"></script>
   <script src="js/eqnobjs/eqn-bracket-term.js"></script>
   <script src="js/eqnobjs/eqn-multiply-term.js"></script>
+  <script src="js/eqnobjs/eqn-worker-api.js"></script>
 </body>
 </html>

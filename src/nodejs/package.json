@@ -1,0 +1,36 @@
+{
+    "name": "expensecalculator",
+    "description" : "Expense Calculator",
+    "version": "1.0.0",
+    "author": "Aditya Hegde",
+    "main" : "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository" : {
+      "type" : "git",
+      "url" : "https://github.com/AdityaHegde/expensecalculator"
+    },
+    "keywords" : [
+      "OpenShift",
+      "expense",
+      "calculator",
+      "nodejs",
+      "emberjs",
+      "bootstrap",
+    ],
+    "engines": {
+      "node": "0.10.x"
+      "npm" : ">= 1.0.0",
+    },
+    "dependencies": {
+      "mongodb" : "> 1.1.10" ,
+      "express" : ">3.0.0rc4"
+    },
+    "devDependencies": {},
+    "bundleDependencies": [],
+    "licence" : "MIT",
+    "bugs" : {
+      "url" : "https://github.com/AdityaHegde/expensecalculator/issues"
+    }
+}

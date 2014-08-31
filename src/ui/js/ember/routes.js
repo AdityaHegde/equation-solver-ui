@@ -1,20 +1,21 @@
 EQNAPP.IndexRoute = Ember.Route.extend({
-  /*model : function(params) {
-    this.transition('problem', params.problem_id);
-  },*/
+  model : function(params) {
+    return this.store.findById("profile", "1234");
+  },
+
+  afterModel : function(model) {
+    Ember.set("EQNAPP.CurProfile", model);
+  },
+});
+
+EQNAPP.ProblemsRoute = Ember.Route.extend({
+  model : function(params) {
+    return Ember.get("EQNAPP.CurProfile");
+  },
 });
 
 EQNAPP.ProblemRoute = Ember.Route.extend({
   model : function(params) {
-  },
-});
-
-EQNAPP.EqnsRoute = Ember.Route.extend({
-  model : function(params) {
-  },
-});
-
-EQNAPP.EqnRoute = Ember.Route.extend({
-  model : function(params) {
+    return this.store.createRecord("problem");
   },
 });
