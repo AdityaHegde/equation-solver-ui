@@ -10,14 +10,14 @@ function Term(config) {
   this.init();
 }
 Term.sortFun = function(a, b) {
-  return b.var < a.var;
+  return b.vari < a.vari;
 };
 inherit(Base, Term, {
 
   key : "Term",
 
   init : function() {
-    this.var = this.var || "";
+    this.vari = this.vari || "";
     this.coeff = Number(this.coeff) || 1;
   },
 
@@ -32,7 +32,7 @@ inherit(Base, Term, {
 
   parse : function(tokens) {
     var t = tokens.next();
-    this.var = "";
+    this.vari = "";
     //if the term begins with an operator
     if(operators[t]) {
       this.op = t;
@@ -86,7 +86,7 @@ inherit(Base, Term, {
       }
     }
     //the next token is always a vairable
-    this.var = t;
+    this.vari = t;
     t = tokens.next();
     if(t === "^") {
       //if next token is ^, compute pwr
@@ -108,10 +108,10 @@ inherit(Base, Term, {
     if(this.sortStr && term.sortStr) {
       if(this.sortStr === term.sortStr) return 1
     }
-    else if(term.var) {
-      if(this.var === term.var && (typeOnly || this.pwr === term.pwr)) return 1
+    else if(term.vari) {
+      if(this.vari === term.vari && (typeOnly || this.pwr === term.pwr)) return 1
     }
-    //else if(Ember.isEmpty(term.var) && Ember.isEmpty(this.var)) return 1;
+    //else if(Ember.isEmpty(term.vari) && Ember.isEmpty(this.vari)) return 1;
     return 0;
   },
 
@@ -156,13 +156,13 @@ inherit(Base, Term, {
   },
 
   copy : function() {
-    return new Term({coeff : this.coeff, var : this.var, pwr : this.pwr, op : this.op});
+    return new Term({coeff : this.coeff, vari : this.vari, pwr : this.pwr, op : this.op});
   },
 
   replace : function(term, withTerm) {
     //the place where the replace actually happens
     //replace only if 'this' is the same variable as 'term'
-    if(term.var && term.var === this.var) {
+    if(term.vari && term.vari === this.vari) {
       //create a copy of 'withTerm'
       var ret = withTerm.copy();
       //multiply pwr of 'this' to it
@@ -186,7 +186,7 @@ inherit(Base, Term, {
     var t = null;
     //execute only if it is 'this' is the same variable as 'term'
     //and has a greater pwr that the one passed, if passed
-    if(this.var === term.var && (!pwr || this.pwr >= pwr)) {
+    if(this.vari === term.vari && (!pwr || this.pwr >= pwr)) {
       //create a copy of 'this'
       t = this.copy();
       t.coeff = 1;
@@ -197,7 +197,7 @@ inherit(Base, Term, {
       }
       else {
         //else segregate all of the var and retain a number
-        this.var = "";
+        this.vari = "";
         this.pwr = 1;
       }
     }
@@ -206,13 +206,13 @@ inherit(Base, Term, {
 
   hasSTerm : function(sterm) {
     if(!sterm) return 1;
-    if(this.var && sterm.var === this.var) return 1;
+    if(this.vari && sterm.vari === this.vari) return 1;
     return 0;
   },
 
   convertToString : function () {
-    if(this.var) {
-      return (this.coeff !== 1 ? (this.coeff < 0 ? "("+this.coeff+")":this.coeff):"") + this.var + (this.pwr !== 1 ? "^"+this.pwr : "");
+    if(this.vari) {
+      return (this.coeff !== 1 ? (this.coeff < 0 ? "("+this.coeff+")":this.coeff):"") + this.vari + (this.pwr !== 1 ? "^"+this.pwr : "");
     }
     else {
       return (this.coeff < 0 ? "("+this.coeff+")":this.coeff);
@@ -253,7 +253,7 @@ inherit(Base, Term, {
       //powers for terms
       var ppp = Math.factors.getPairsOfFactors(terms[i].pwr), psft = [];
       for(var j = 0; j < ppp.length; j++) {
-        psft.push([new Term({var : terms[i].var, pwr : ppp[j][0]}), ppp[j][1]]);
+        psft.push([new Term({vari : terms[i].vari, pwr : ppp[j][0]}), ppp[j][1]]);
       }
       tsnps.push(psft);
     }
@@ -261,9 +261,9 @@ inherit(Base, Term, {
   },
 
   processForFactorization : function(termHeap, termRef, termsMeta, seperate) {
-    if(this.var) {
+    if(this.vari) {
       for(var i = 1; i <= this.pwr; i++) {
-        var key = this.var+"--"+i;
+        var key = this.vari+"--"+i;
         if(termRef[0][key]) {
           termRef[0][key][0] += i;
           Math.heap.modified(termHeap, termRef[0][key], TermBracket.heapcmp);
@@ -271,9 +271,9 @@ inherit(Base, Term, {
         else {
           //0th idx - no of operations decreased
           //1st idx - type, 0 - simple term occurance
-          //2nd idx - var
+          //2nd idx - vari
           //3rd idx - pwr
-          termRef[0][key] = [-1, 0, this.var, i];
+          termRef[0][key] = [-1, 0, this.vari, i];
           Math.heap.insert(termHeap, termRef[0][key], TermBracket.heapcmp);
         }
       }
@@ -300,23 +300,23 @@ inherit(Base, Term, {
   },
 
   getVars : function(varRef) {
-    if(this.var) {
-      var arr = /^(.*?)\[\d+\]$/.exec(this.var);
+    if(this.vari) {
+      var arr = /^(.*?)\[\d+\]$/.exec(this.vari);
       if(arr) varRef[arr[1]] = {Array : 1};
-      varRef[this.var] = varRef[this.var] || {};
-      varRef[this.var][this.pwr || 1] = 1;
+      varRef[this.vari] = varRef[this.vari] || {};
+      varRef[this.vari][this.pwr || 1] = 1;
     }
   },
 
   getCode : function() {
     var str = "", cf = 0;
-    if(this.var) {
-      var idx = indexMap[this.var.charAt(0)];
+    if(this.vari) {
+      var idx = indexMap[this.vari.charAt(0)];
       if(idx || idx === 0) {
-        str += this.var.substr(1) + "[" + idx + "]";
+        str += this.vari.substr(1) + "[" + idx + "]";
       }
       else {
-        str += this.var;
+        str += this.vari;
       }
       cf = 1;
     }
@@ -331,8 +331,8 @@ inherit(Base, Term, {
   },
 
   sortAndStringify : function() {
-    if(this.var) {
-      this.sortStr = this.var + (this.pwr !== 1 ? "^"+this.pwr : "");
+    if(this.vari) {
+      this.sortStr = this.vari + (this.pwr !== 1 ? "^"+this.pwr : "");
       this.fullStr = (this.coeff !== 1 ? (this.coeff < 0 ? "("+this.coeff+")":this.coeff):"") + this.sortStr;
     }
     else {

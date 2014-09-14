@@ -1,13 +1,3 @@
-EQNAPP.Profile = ModelWrapper.createModelWrapper({
-  user_id : attr(),
-  user_name : attr(),
-  problems : hasMany("problem", {async : true}),
-}, {
-  keys : ["user_id"],
-  apiName : "profile",
-  queryParams : ["user_id"],
-});
-
 EQNAPP.Problem = ModelWrapper.createModelWrapper({
   name : attr(),
   eqns : hasMany("eqn", {async : true}),

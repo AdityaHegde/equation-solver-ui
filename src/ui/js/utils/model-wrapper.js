@@ -63,10 +63,10 @@ ModelWrapper.createModelWrapper = function(object, config, mixins) {
       model[CrudAdapter.allowedModelAttrs[i].attr] = config[CrudAdapter.allowedModelAttrs[i].attr];
     }
     else {
-      if(CrudAdapter.allowedModelAttrs[i].default === "emptyArray") {
+      if(CrudAdapter.allowedModelAttrs[i].defaultValue === "emptyArray") {
         model[CrudAdapter.allowedModelAttrs[i].attr] = Ember.A();
       }
-      else if(CrudAdapter.allowedModelAttrs[i].default === "value") {
+      else if(CrudAdapter.allowedModelAttrs[i].defaultValue === "value") {
         model[CrudAdapter.allowedModelAttrs[i].attr] = CrudAdapter.allowedModelAttrs[i].value;
       }
     }

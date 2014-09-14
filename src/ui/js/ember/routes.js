@@ -1,6 +1,6 @@
 EQNAPP.IndexRoute = Ember.Route.extend({
   model : function(params) {
-    return this.store.findById("profile", "1234");
+    return this.store.findAll("problem");
   },
 
   afterModel : function(model) {

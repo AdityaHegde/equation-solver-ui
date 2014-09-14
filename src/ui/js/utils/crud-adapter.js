@@ -9,60 +9,60 @@ CrudAdapter.endPoint = {
 };
 CrudAdapter.allowedModelAttrs = [{
   attr : "keys",
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "apiName",
-  default : "value",
+  defaultValue : "value",
   value : "data/generic",
 }, {
   attr : "queryParams", 
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "findParams", 
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "extraAttrs", 
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "ignoreFieldsOnCreateUpdate", 
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "ignoreFieldsOnRetrieveBackup", 
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "removeAttrsFromBackupOnFind", 
-  default : "emptyArray",
+  defaultValue : "emptyArray",
 }, {
   attr : "retainId", 
-  default : "value",
+  defaultValue : "value",
   value : false,
 }, {
   attr : "useIdForBackup", 
-  default : "value",
+  defaultValue : "value",
   value : false,
 }, {
   attr : "paginatedAttribute", 
-  default : "value",
+  defaultValue : "value",
   value : "id",
 }, {
   attr : "normalizeFunction", 
-  default : "value",
+  defaultValue : "value",
   value : function() {},
 }, {
   attr : "preSerializeRelations", 
-  default : "value",
+  defaultValue : "value",
   value : function() {},
 }, {
   attr : "serializeFunction", 
-  default : "value",
+  defaultValue : "value",
   value : function() {},
 }, {
   attr : "backupData", 
-  default : "value",
+  defaultValue : "value",
   value : function() {},
 }, {
   attr : "retrieveBackup", 
-  default : "value",
+  defaultValue : "value",
   value : function() {},
 }];
 CrudAdapter.ModelMap = {};

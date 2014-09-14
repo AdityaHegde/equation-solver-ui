@@ -51,7 +51,7 @@ inherit(TermBracket, TermMultiply, {
   },
 
   addTerm : function(term) {
-    if(term.var || !term.terms || term.pwr !== 1) {
+    if(term.vari || !term.terms || term.pwr !== 1) {
       for(var i = 0; i < this.terms.length; i++) {
         if(this.terms[i].equalTo(term, "true") === 1) {
           this.terms[i].pwr += term.pwr;
@@ -61,7 +61,7 @@ inherit(TermBracket, TermMultiply, {
           return;
         }
       }
-      if(term.var || term.terms) {
+      if(term.vari || term.terms) {
         this.terms.push(term);
         this.terms.sort(Term.sortFun);
       }
@@ -119,8 +119,8 @@ inherit(TermBracket, TermMultiply, {
     this.terms = [];
     for(var i = 0; i < terms.length; i++) {
       terms[i] = terms[i].simplify(sterm);
-      if(terms[i] && (terms[i].var || terms[i].terms || terms[i].coeff !== 1 || terms[i].pwr !== 1)) {
-        if(!terms[i].var && !terms[i].terms) this.coeff *= terms[i].coeff;
+      if(terms[i] && (terms[i].vari || terms[i].terms || terms[i].coeff !== 1 || terms[i].pwr !== 1)) {
+        if(!terms[i].vari && !terms[i].terms) this.coeff *= terms[i].coeff;
         else this.addTerm(terms[i]);
       }
     }
@@ -224,7 +224,7 @@ inherit(TermBracket, TermMultiply, {
   segregate : function(term, pwr) {
     var t = null;
     for(var i = 0; i < this.terms.length; i++) {
-      if(this.terms[i].var === term.var && (!pwr || this.terms[i].pwr >= pwr)) {
+      if(this.terms[i].vari === term.vari && (!pwr || this.terms[i].pwr >= pwr)) {
         if(pwr && this.terms[i].pwr > pwr) {
           t = this.terms[i].copy();
           t.pwr = pwr;
@@ -278,9 +278,9 @@ inherit(TermBracket, TermMultiply, {
         for(var j = 0; j < pts[i].length; j++) {
           var term = pts[i][j][0];
           terms.push(term);
-          btkey += term.var+"--"+term.pwr+"__";
-          tkey.push(term.var+"--"+(term.pwr * pts[i][j][1]));
-          termToPwrMap[term.var] = term.pwr;
+          btkey += term.vari+"--"+term.pwr+"__";
+          tkey.push(term.vari+"--"+(term.pwr * pts[i][j][1]));
+          termToPwrMap[term.vari] = term.pwr;
           pwr += pts[i][j][1];
           pwrOfTerms += term.pwr;
         }
@@ -294,8 +294,8 @@ inherit(TermBracket, TermMultiply, {
             var _terms = bts[j], _pwrs = [],
                 _tkey = [];
             for(var k = 0; k < _terms.length; k++) {
-              if(_terms[k].pwr > 0) _tkey.push(_terms[k].var+"--"+_terms[k].pwr);
-              _pwrs.push(_terms[k].pwr / termToPwrMap[_terms[k].var]);
+              if(_terms[k].pwr > 0) _tkey.push(_terms[k].vari+"--"+_terms[k].pwr);
+              _pwrs.push(_terms[k].pwr / termToPwrMap[_terms[k].vari]);
             }
             _tkey = _tkey.join("__");
             bt.tref[_tkey] = [0, 0, MathUtils.coeffsForRaiseToPwr.getCoeffForAPwrSet(pwr, _pwrs)];

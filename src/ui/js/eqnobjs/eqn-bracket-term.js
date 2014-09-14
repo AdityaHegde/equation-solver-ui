@@ -291,7 +291,7 @@ inherit(Term, TermBracket, {
       f = 0;
       if(termHeap.length > 0 && termHeap[0][0] > 0) {
         if(termHeap[0][1] === 0) {
-          this.segregate(new Term({var : termHeap[0][2]}), termHeap[0][3]);
+          this.segregate(new Term({vari : termHeap[0][2]}), termHeap[0][3]);
           this.sortAndStringify();
           if(this.terms.length === 1) {
             var t = this.terms.pop();

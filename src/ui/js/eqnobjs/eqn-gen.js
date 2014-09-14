@@ -39,7 +39,7 @@ function EqnGen(config) {
 
   for(var i = 0; i < this.equationStrings.length; i++) {
     var eqn = new Eqn({equationString : this.equationStrings[i]}),
-        lhsTerm = new Term({var : this.lhsVariables[i], op : "+"});
+        lhsTerm = new Term({vari : this.lhsVariables[i], op : "+"});
     this.equations.push(eqn);
     for(var v in eqn.vars) {
       this.vars[v] = this.vars[v] || [];
@@ -86,7 +86,7 @@ inherit(Base, EqnGen, {
     var str = "";
     for(var i = 0; i < this.equations.length; i++) {
       if(i === this.mainIndex) str += "M: ";
-      if(this.lhsTerms[i].var) str += this.lhsTerms[i].var+" = ";
+      if(this.lhsTerms[i].vari) str += this.lhsTerms[i].vari+" = ";
       str += this.equations[i].convertToString();
       if(i < this.equations.length - 1) str += "<br>";
     }

@@ -6,7 +6,7 @@ app.configure(function(){
   app.use(express.bodyParser());
 });
 
-app.get("/profile/get", dataHandler.handlerGet);
+app.get("/problem/getAll", dataHandler.handlerGet);
 app.get("/hero/getAll", dataHandler.handlerGetAll);
 
 app.use("/", express.static('./public'));
