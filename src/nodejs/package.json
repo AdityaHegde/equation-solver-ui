@@ -17,11 +17,11 @@
       "calculator",
       "nodejs",
       "emberjs",
-      "bootstrap",
+      "bootstrap"
     ],
     "engines": {
-      "node": "0.10.x"
       "npm" : ">= 1.0.0",
+      "node": "0.10.x"
     },
     "dependencies": {
       "mongodb" : "> 1.1.10" ,

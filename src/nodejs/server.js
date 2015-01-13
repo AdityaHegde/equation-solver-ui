@@ -1,10 +1,5 @@
 var express = require("express"),
-    dataHandler = require("data_handler"),
     app = express();
-
-app.configure(function(){
-  app.use(express.bodyParser());
-});
 
 app.get("/problem/getAll", dataHandler.handlerGet);
 app.get("/hero/getAll", dataHandler.handlerGetAll);
